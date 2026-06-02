@@ -1,4 +1,4 @@
-package com.example.lenaycarbon.dto
+package com.example.lenaycarbon.data.dto
 
 enum class CategoriaProducto {
     POLLO,

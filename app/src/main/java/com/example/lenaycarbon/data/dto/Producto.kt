@@ -1,4 +1,4 @@
-package com.example.lenaycarbon.dto
+package com.example.lenaycarbon.data.dto
 
 data class Producto(
     val nombre:String,
