@@ -1,0 +1,99 @@
+package com.example.lenaycarbon.data.mockup
+
+import com.example.lenaycarbon.R
+import com.example.lenaycarbon.data.dto.CategoriaProducto
+import com.example.lenaycarbon.data.dto.Producto
+
+val listaProductos = listOf(
+    Producto(
+        id = 1,
+        nombre = "Pollo a la Brasa Personal",
+        precio = 18.90,
+        descripcion = "1/4 de pollo a la brasa acompañado de papas fritas y ensalada",
+        imagen = R.drawable.pollo_personal,
+        disponible = true,
+        categoria = CategoriaProducto.POLLO
+    ),
+    Producto(
+        id = 2,
+        nombre = "Pollo a la Brasa Familiar",
+        precio = 65.90,
+        descripcion = "Pollo entero a la brasa con papas fritas, ensalada y salsas",
+        imagen = R.drawable.pollo_familiar,
+        disponible = true,
+        categoria = CategoriaProducto.POLLO
+    ),
+    Producto(
+        id = 3,
+        nombre = "Medio Pollo",
+        precio = 34.90,
+        descripcion = "1/2 pollo a la brasa con papas fritas y ensalada",
+        imagen = R.drawable.medio_pollo,
+        disponible = true,
+        categoria = CategoriaProducto.POLLO
+    ),
+    Producto(
+        id = 4,
+        nombre = "Combo Familiar",
+        precio = 79.90,
+        descripcion = "Pollo entero + 2 gaseosas personales + papas fritas extra",
+        imagen = R.drawable.combo_familiar,
+        disponible = true,
+        categoria = CategoriaProducto.COMBO
+    ),
+    Producto(
+        id = 5,
+        nombre = "Combo Pareja",
+        precio = 42.90,
+        descripcion = "1/2 pollo + 2 gaseosas personales + papas fritas",
+        imagen = R.drawable.combo_pareja,
+        disponible = true,
+        categoria = CategoriaProducto.COMBO
+    ),
+    Producto(
+        id = 6,
+        nombre = "Papas Fritas",
+        precio = 8.90,
+        descripcion = "Porción de papas fritas crocantes con crema huancaína",
+        imagen = R.drawable.papas_fritas,
+        disponible = true,
+        categoria = CategoriaProducto.ACOMPANAMIENTO
+    ),
+    Producto(
+        id = 7,
+        nombre = "Ensalada Fresca",
+        precio = 6.50,
+        descripcion = "Ensalada de lechuga, tomate, cebolla y zanahoria",
+        imagen = R.drawable.ensalada,
+        disponible = true,
+        categoria = CategoriaProducto.ACOMPANAMIENTO
+    ),
+    Producto(
+        id = 8,
+        nombre = "Arroz con Leche",
+        precio = 7.90,
+        descripcion = "Postre tradicional de arroz con leche y canela",
+        imagen = R.drawable.arroz_con_leche,
+        disponible = false,
+        categoria = CategoriaProducto.ACOMPANAMIENTO
+    ),
+    Producto(
+        id = 9,
+        nombre = "Inca Kola 500ml",
+        precio = 5.50,
+        descripcion = "Gaseosa Inca Kola botella personal 500ml bien fría",
+        imagen = R.drawable.inca_kola,
+        disponible = true,
+        categoria = CategoriaProducto.BEBIDA
+    ),
+    Producto(
+        id = 10,
+        nombre = "Chicha Morada",
+        precio = 6.90,
+        descripcion = "Chicha morada artesanal preparada con maíz morado y frutas",
+        imagen = R.drawable.chicha_morada,
+        disponible = true,
+        categoria = CategoriaProducto.BEBIDA
+    )
+)
+
