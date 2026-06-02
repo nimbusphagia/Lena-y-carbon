@@ -34,10 +34,9 @@ fun Catalogo(catalogo: List<Producto>, nav: NavController) {
     var categoriaSeleccionada by remember { mutableStateOf<CategoriaProducto?>(null) }
 
     val productosFiltrados = catalogo.filter { producto ->
-        val coincideBusqueda = producto.nombre.contains(query, ignoreCase = true) ||
-                producto.descripcion.contains(query, ignoreCase = true)
-        val coincideCategoria = categoriaSeleccionada == null ||
-                producto.categoria == categoriaSeleccionada
+        val coincideBusqueda = producto.nombre.contains(query, ignoreCase = true)
+        val coincideCategoria =
+            categoriaSeleccionada == null || producto.categoria == categoriaSeleccionada
         coincideBusqueda && coincideCategoria
     }
 
@@ -66,25 +65,15 @@ fun Catalogo(catalogo: List<Producto>, nav: NavController) {
                 FilterChip(
                     selected = categoriaSeleccionada == null,
                     onClick = { categoriaSeleccionada = null },
-                    label = { Text("Todos") }
-                )
+                    label = { Text("Todos") })
             }
             items(CategoriaProducto.entries) { categoria ->
-                FilterChip(
-                    selected = categoriaSeleccionada == categoria,
-                    onClick = {
-                        categoriaSeleccionada =
-                            if (categoriaSeleccionada == categoria) null else categoria
-                    },
-                    label = {
-                        Text(
-                            categoria.name
-                                .replace("_", " ")
-                                .lowercase()
-                                .replaceFirstChar { it.uppercase() }
-                        )
-                    }
-                )
+                FilterChip(selected = categoriaSeleccionada == categoria, onClick = {
+                    categoriaSeleccionada =
+                        if (categoriaSeleccionada == categoria) null else categoria
+                }, label = {
+                    Text( categoria.display)
+                })
             }
         }
 
@@ -99,9 +88,7 @@ fun Catalogo(catalogo: List<Producto>, nav: NavController) {
             LazyColumn {
                 items(productosFiltrados) { producto ->
                     ProductoCard(
-                        producto = producto,
-                        onClick = { nav.navigate("detail/${producto.id}") }
-                    )
+                        producto = producto, onClick = { nav.navigate("detail/${producto.id}") })
                 }
             }
         }
