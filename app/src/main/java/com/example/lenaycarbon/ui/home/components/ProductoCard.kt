@@ -93,7 +93,7 @@ fun ProductoCard(
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = producto.categoria.name
+                        text = producto.categoria.display
                             .replace("_", " ")
                             .lowercase()
                             .replaceFirstChar { it.uppercase() },

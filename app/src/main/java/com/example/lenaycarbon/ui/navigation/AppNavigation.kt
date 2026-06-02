@@ -40,6 +40,4 @@ fun AppNavigation() {
             composable(Routes.HOME) { HomeScreen(navController) }
         }
     }
-
-
 }
