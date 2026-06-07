@@ -7,3 +7,4 @@ enum class CategoriaProducto (val display:String){
     COMBO("Combo"),
 
 }
+//id, estado, nombre

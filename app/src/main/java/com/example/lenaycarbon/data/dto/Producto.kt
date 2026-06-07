@@ -6,6 +6,7 @@ data class Producto(
     val precio:Double,
     val descripcion:String,
     val imagen:Int,
-    val disponible:Boolean,
-    val categoria: CategoriaProducto,
+    val disponible:Boolean, //estado
+    val stock:Int,
+    val categoria: CategoriaProducto, //idCategoria
 )
