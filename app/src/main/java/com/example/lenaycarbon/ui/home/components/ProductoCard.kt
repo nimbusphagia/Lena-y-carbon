@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.lenaycarbon.data.dto.Producto
+import com.example.lenaycarbon.data.mockup.listaCategorias
 
 @Composable
 fun ProductoCard(
@@ -92,14 +93,13 @@ fun ProductoCard(
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold
                     )
-                    Text(
-                        text = producto.categoria.display
-                            .replace("_", " ")
-                            .lowercase()
-                            .replaceFirstChar { it.uppercase() },
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    listaCategorias.find { categoria -> categoria.id == producto.idCategoria }?.nombre?.let {
+                        Text(
+                            text = it,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
             }
         }

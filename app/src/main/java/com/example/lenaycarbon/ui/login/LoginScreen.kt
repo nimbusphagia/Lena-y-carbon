@@ -1,4 +1,4 @@
-package com.example.lenaycarbon.ui.screen
+package com.example.lenaycarbon.ui.login
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image

@@ -8,7 +8,7 @@ data class Pedido(
     val idCliente: Int,
     val estado: EstadoPedido,
     val subTotal: Double,
-    val idDelivery: Int,
+    val idTipoEntrega: Int,
     val total:Double,
     val observacion: String,
     val fechaPedido: Date,

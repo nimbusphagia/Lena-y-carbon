@@ -12,7 +12,8 @@ val listaProductos = listOf(
         descripcion = "1/4 de pollo a la brasa acompañado de papas fritas y ensalada",
         imagen = R.drawable.pollo_personal,
         disponible = true,
-        categoria = CategoriaProducto.POLLO
+        idCategoria = 1,
+        stock = 100,
     ),
     Producto(
         id = 2,
@@ -21,7 +22,8 @@ val listaProductos = listOf(
         descripcion = "Pollo entero a la brasa con papas fritas, ensalada y salsas",
         imagen = R.drawable.pollo_familiar,
         disponible = true,
-        categoria = CategoriaProducto.POLLO
+        idCategoria = 1,
+        stock = 100,
     ),
     Producto(
         id = 3,
@@ -30,7 +32,8 @@ val listaProductos = listOf(
         descripcion = "1/2 pollo a la brasa con papas fritas y ensalada",
         imagen = R.drawable.medio_pollo,
         disponible = true,
-        categoria = CategoriaProducto.POLLO
+        idCategoria = 1,
+        stock = 100,
     ),
     Producto(
         id = 4,
@@ -39,7 +42,8 @@ val listaProductos = listOf(
         descripcion = "Pollo entero + 2 gaseosas personales + papas fritas extra",
         imagen = R.drawable.combo_familiar,
         disponible = true,
-        categoria = CategoriaProducto.COMBO
+        idCategoria = 4,
+        stock = 100,
     ),
     Producto(
         id = 5,
@@ -48,7 +52,8 @@ val listaProductos = listOf(
         descripcion = "1/2 pollo + 2 gaseosas personales + papas fritas",
         imagen = R.drawable.combo_pareja,
         disponible = true,
-        categoria = CategoriaProducto.COMBO
+        idCategoria = 4,
+        stock = 100,
     ),
     Producto(
         id = 6,
@@ -57,7 +62,8 @@ val listaProductos = listOf(
         descripcion = "Porción de papas fritas crocantes con crema huancaína",
         imagen = R.drawable.papas_fritas,
         disponible = true,
-        categoria = CategoriaProducto.ACOMPANAMIENTO
+        idCategoria = 3,
+        stock = 100,
     ),
     Producto(
         id = 7,
@@ -66,7 +72,8 @@ val listaProductos = listOf(
         descripcion = "Ensalada de lechuga, tomate, cebolla y zanahoria",
         imagen = R.drawable.ensalada,
         disponible = true,
-        categoria = CategoriaProducto.ACOMPANAMIENTO
+        idCategoria = 3,
+        stock = 100,
     ),
     Producto(
         id = 8,
@@ -75,7 +82,8 @@ val listaProductos = listOf(
         descripcion = "Postre tradicional de arroz con leche y canela",
         imagen = R.drawable.arroz_con_leche,
         disponible = false,
-        categoria = CategoriaProducto.ACOMPANAMIENTO
+        idCategoria = 3,
+        stock = 100,
     ),
     Producto(
         id = 9,
@@ -84,7 +92,8 @@ val listaProductos = listOf(
         descripcion = "Gaseosa Inca Kola botella personal 500ml bien fría",
         imagen = R.drawable.inca_kola,
         disponible = true,
-        categoria = CategoriaProducto.BEBIDA
+        idCategoria = 2,
+        stock = 100,
     ),
     Producto(
         id = 10,
@@ -93,7 +102,8 @@ val listaProductos = listOf(
         descripcion = "Chicha morada artesanal preparada con maíz morado y frutas",
         imagen = R.drawable.chicha_morada,
         disponible = true,
-        categoria = CategoriaProducto.BEBIDA
+        idCategoria = 2,
+        stock = 100,
     )
 )
 

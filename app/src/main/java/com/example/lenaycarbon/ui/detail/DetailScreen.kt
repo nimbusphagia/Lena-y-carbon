@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.lenaycarbon.data.mockup.listaCategorias
 import com.example.lenaycarbon.data.mockup.listaProductos
 import com.example.lenaycarbon.ui.detail.components.DetailCantidad
 import com.example.lenaycarbon.ui.detail.components.DetailHeader
@@ -46,7 +47,7 @@ fun DetailScreen(productoId: Int?, nav: NavController) {
                 .padding(20.dp)
         ) {
             Text(
-                text = producto.categoria.display,
+                text = listaCategorias.find { it.id == producto.idCategoria }?.nombre ?: "",
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.primary
             )

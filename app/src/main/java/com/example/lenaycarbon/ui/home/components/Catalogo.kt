@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.lenaycarbon.data.dto.CategoriaProducto
 import com.example.lenaycarbon.data.dto.Producto
+import com.example.lenaycarbon.data.mockup.listaCategorias
 
 @Composable
 fun Catalogo(catalogo: List<Producto>, nav: NavController) {
@@ -36,7 +37,7 @@ fun Catalogo(catalogo: List<Producto>, nav: NavController) {
     val productosFiltrados = catalogo.filter { producto ->
         val coincideBusqueda = producto.nombre.contains(query, ignoreCase = true)
         val coincideCategoria =
-            categoriaSeleccionada == null || producto.categoria == categoriaSeleccionada
+            categoriaSeleccionada == null || producto.idCategoria == categoriaSeleccionada!!.id
         coincideBusqueda && coincideCategoria
     }
 
@@ -67,12 +68,12 @@ fun Catalogo(catalogo: List<Producto>, nav: NavController) {
                     onClick = { categoriaSeleccionada = null },
                     label = { Text("Todos") })
             }
-            items(CategoriaProducto.entries) { categoria ->
-                FilterChip(selected = categoriaSeleccionada == categoria, onClick = {
+            items(listaCategorias) { categoria ->
+                FilterChip(selected = categoriaSeleccionada?.id == categoria.id, onClick = {
                     categoriaSeleccionada =
                         if (categoriaSeleccionada == categoria) null else categoria
                 }, label = {
-                    Text( categoria.display)
+                    Text( categoria.nombre)
                 })
             }
         }
