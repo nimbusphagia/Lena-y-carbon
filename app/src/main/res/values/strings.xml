@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Lena y Carbon</string>
+    <string name="splash_title">LEÑA Y CARBON</string>
+    <string name="splash_loading">Cargando...</string>
+    <string name="splash_logo_content_description">Logo de Lena y Carbon</string>
+    <string name="login_title">Login</string>
 </resources>

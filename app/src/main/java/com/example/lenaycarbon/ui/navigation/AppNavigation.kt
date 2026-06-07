@@ -20,6 +20,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.compose.*
 import com.example.lenaycarbon.ui.detail.DetailScreen
 import com.example.lenaycarbon.ui.home.HomeScreen
+import com.example.lenaycarbon.ui.screen.LoginScreen
+import com.example.lenaycarbon.ui.screen.SplashScreen
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavigation() {
@@ -69,9 +72,17 @@ fun AppNavigation() {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Routes.HOME,
+            startDestination = Routes.SPLASH,
             modifier = Modifier.padding(innerPadding)
         ) {
+            composable(Routes.SPLASH) {
+                SplashScreen(onSplashFinished = {
+                    navController.navigate(Routes.LOGIN) {
+                        popUpTo(Routes.SPLASH) { inclusive = true }
+                    }
+                })
+            }
+            composable(Routes.LOGIN) { LoginScreen(onLoginSuccess = {navController.navigate(Routes.HOME)}) }
             composable(Routes.HOME) { HomeScreen(navController) }
             composable(Routes.DETAIL) { backStackEntry ->
                 val productoId = backStackEntry.arguments
