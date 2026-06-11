@@ -66,6 +66,20 @@ fun AppNavigation() {
                         )
                     )
                 }
+                //CONDICION DEL TOP BAR PARA SEGUIMIENTO DE PEDIDO SCREEN
+                currentRoute?.startsWith("seguimiento") == true -> {
+                    TopAppBar(
+                        title = { Text("Estado de tu Pedido") },
+                        navigationIcon = {
+                            IconButton(onClick = { navController.popBackStack() }) {
+                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
+                            }
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        )
+                    )
+                }
             }
         }
     ) { innerPadding ->
@@ -90,6 +104,18 @@ fun AppNavigation() {
                 DetailScreen(
                     productoId = productoId,
                     nav = navController
+                )
+            }
+            // MI COMPOSABLE DE SEGUIMIENTO DE PEDIDO
+            composable(Routes.SEGUIMIENTO) { backStackEntry ->
+                val pedidoId = backStackEntry.arguments
+                    ?.getString("pedidoId")
+                    ?.toIntOrNull()
+
+                // Llamo a la pantalla y le paso los datos exactos
+                com.example.lenaycarbon.ui.seguimiento.SeguimientoScreen(
+                    pedidoId = pedidoId,
+                    navController = navController
                 )
             }
         }
