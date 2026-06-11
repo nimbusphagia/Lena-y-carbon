@@ -9,6 +9,9 @@ object Routes {
     //RUTA A ESTADO DE PEDIDO (FABRIZIO)
     const val SEGUIMIENTO = "seguimiento/{pedidoId}"
 
+    //RUTA DE ACCESO AL CARRITO
+    const val DELIVERYTYPE = "deliveryType/{totalCarrito}"
+
     // FUNCION DE ESTADO DE PEDIDO (FABRIZIO)
     fun seguimientoRoute(pedidoId: Int):String{
         return "seguimiento/$pedidoId"

@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.compose.*
+import com.example.lenaycarbon.ui.deliveryType.DeliverTypeScreen
 import com.example.lenaycarbon.ui.detail.DetailScreen
 import com.example.lenaycarbon.ui.home.HomeScreen
 import com.example.lenaycarbon.ui.login.LoginScreen
@@ -66,13 +67,21 @@ fun AppNavigation() {
                         )
                     )
                 }
-                //CONDICION DEL TOP BAR PARA SEGUIMIENTO DE PEDIDO SCREEN
-                currentRoute?.startsWith("seguimiento") == true -> {
+
+                currentRoute?.startsWith("deliveryType") == true -> {
                     TopAppBar(
-                        title = { Text("Estado de tu Pedido") },
-                        navigationIcon = {
-                            IconButton(onClick = { navController.popBackStack() }) {
-                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
+                        title = {
+                            Column {
+                                Text(
+                                    text = "Leña y Carbón",
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Text(
+                                    text = "¿Cómo te llevarás tu pedido?",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
                             }
                         },
                         colors = TopAppBarDefaults.topAppBarColors(
@@ -80,6 +89,7 @@ fun AppNavigation() {
                         )
                     )
                 }
+
             }
         }
     ) { innerPadding ->
@@ -106,17 +116,15 @@ fun AppNavigation() {
                     nav = navController
                 )
             }
-            // MI COMPOSABLE DE SEGUIMIENTO DE PEDIDO
-            composable(Routes.SEGUIMIENTO) { backStackEntry ->
-                val pedidoId = backStackEntry.arguments
-                    ?.getString("pedidoId")
-                    ?.toIntOrNull()
-
-                // Llamo a la pantalla y le paso los datos exactos
-                com.example.lenaycarbon.ui.seguimiento.SeguimientoScreen(
-                    pedidoId = pedidoId,
-                    navController = navController
+            composable(Routes.DELIVERYTYPE){ backStackEntry ->
+                val totalCarrito = backStackEntry.arguments
+                    ?.getString("totalCarrito")
+                    ?.toDoubleOrNull()
+                DeliverTypeScreen(
+                    totalCarrito = totalCarrito,
+                    nav = navController
                 )
+
             }
         }
     }
