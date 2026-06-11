@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.compose.*
+import com.example.lenaycarbon.ui.deliveryType.DeliverTypeScreen
 import com.example.lenaycarbon.ui.detail.DetailScreen
 import com.example.lenaycarbon.ui.home.HomeScreen
 import com.example.lenaycarbon.ui.login.LoginScreen
@@ -66,6 +67,29 @@ fun AppNavigation() {
                         )
                     )
                 }
+
+                currentRoute?.startsWith("deliveryType") == true -> {
+                    TopAppBar(
+                        title = {
+                            Column {
+                                Text(
+                                    text = "Leña y Carbón",
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Text(
+                                    text = "¿Cómo te llevarás tu pedido?",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        )
+                    )
+                }
+
             }
         }
     ) { innerPadding ->
@@ -91,6 +115,16 @@ fun AppNavigation() {
                     productoId = productoId,
                     nav = navController
                 )
+            }
+            composable(Routes.DELIVERYTYPE){ backStackEntry ->
+                val totalCarrito = backStackEntry.arguments
+                    ?.getString("totalCarrito")
+                    ?.toDoubleOrNull()
+                DeliverTypeScreen(
+                    totalCarrito = totalCarrito,
+                    nav = navController
+                )
+
             }
         }
     }

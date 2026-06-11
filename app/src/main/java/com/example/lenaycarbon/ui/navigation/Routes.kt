@@ -6,6 +6,8 @@ object Routes {
     const val HOME = "home"
     const val DETAIL = "detail/{productoId}"
 
+    const val DELIVERYTYPE = "deliveryType/{totalCarrito}"
+
     fun detailRoute(productoId: Int): String {
         return "detail/$productoId"
     }
