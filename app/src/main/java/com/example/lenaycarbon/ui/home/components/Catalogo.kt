@@ -18,10 +18,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -30,25 +26,24 @@ import com.example.lenaycarbon.data.dto.Producto
 import com.example.lenaycarbon.data.mockup.listaCategorias
 
 @Composable
-fun Catalogo(catalogo: List<Producto>, nav: NavController) {
-    var query by remember { mutableStateOf("") }
-    var categoriaSeleccionada by remember { mutableStateOf<CategoriaProducto?>(null) }
-
-    val productosFiltrados = catalogo.filter { producto ->
-        val coincideBusqueda = producto.nombre.contains(query, ignoreCase = true)
-        val coincideCategoria =
-            categoriaSeleccionada == null || producto.idCategoria == categoriaSeleccionada!!.id
-        coincideBusqueda && coincideCategoria
-    }
-
+fun Catalogo(
+    catalogo: List<Producto>,
+    categorias: List<CategoriaProducto> = listaCategorias, // Lista de categorías para pintar chips
+    categoriaSeleccionadaId: Int? = null,                  // ID seleccionado desde VM
+    busqueda: String = "",                                 // Texto búsqueda desde VM
+    onCategoriaChange: (Int?) -> Unit,                     // Callback al VM
+    onSearchChange: (String) -> Unit,                      // Callback al VM
+    nav: NavController
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp)
     ) {
+        // Campo de búsqueda controlado externamente
         OutlinedTextField(
-            value = query,
-            onValueChange = { query = it },
+            value = busqueda,
+            onValueChange = onSearchChange, // Llama al ViewModel, NO cambia estado local
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 12.dp),
@@ -58,27 +53,32 @@ fun Catalogo(catalogo: List<Producto>, nav: NavController) {
             shape = RoundedCornerShape(12.dp)
         )
 
+        // Chips de categorías controlados externamente
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(bottom = 12.dp)
         ) {
             item {
                 FilterChip(
-                    selected = categoriaSeleccionada == null,
-                    onClick = { categoriaSeleccionada = null },
-                    label = { Text("Todos") })
+                    selected = categoriaSeleccionadaId == null,
+                    onClick = { onCategoriaChange(null) },
+                    label = { Text("Todos") }
+                )
             }
-            items(listaCategorias) { categoria ->
-                FilterChip(selected = categoriaSeleccionada?.id == categoria.id, onClick = {
-                    categoriaSeleccionada =
-                        if (categoriaSeleccionada == categoria) null else categoria
-                }, label = {
-                    Text( categoria.nombre)
-                })
+            items(categorias) { categoria ->
+                FilterChip(
+                    selected = categoriaSeleccionadaId == categoria.id,
+                    onClick = {
+                        val nuevaId = if (categoriaSeleccionadaId == categoria.id) null else categoria.id
+                        onCategoriaChange(nuevaId)
+                    },
+                    label = { Text(categoria.nombre) }
+                )
             }
         }
 
-        if (productosFiltrados.isEmpty()) {
+        // Lista reactiva (ya viene filtrada desde el ViewModel)
+        if (catalogo.isEmpty()) {
             Text(
                 text = "No se encontraron productos",
                 style = MaterialTheme.typography.bodyMedium,
@@ -87,9 +87,11 @@ fun Catalogo(catalogo: List<Producto>, nav: NavController) {
             )
         } else {
             LazyColumn {
-                items(productosFiltrados) { producto ->
+                items(catalogo) { producto ->
                     ProductoCard(
-                        producto = producto, onClick = { nav.navigate("detail/${producto.id}") })
+                        producto = producto,
+                        onClick = { nav.navigate("detail/${producto.id}") }
+                    )
                 }
             }
         }

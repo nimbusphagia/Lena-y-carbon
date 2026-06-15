@@ -1,7 +1,11 @@
 package com.example.lenaycarbon.data.dto
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "categorias")
 data class CategoriaProducto(
-    val id: Int,
-    val estado: Boolean,
+    @PrimaryKey val id: Int,
     val nombre: String,
+    val estado: Boolean = true
 )

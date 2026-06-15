@@ -1,7 +1,6 @@
 package com.example.lenaycarbon.data.mockup
 
 import com.example.lenaycarbon.R
-import com.example.lenaycarbon.data.dto.CategoriaProducto
 import com.example.lenaycarbon.data.dto.Producto
 
 val listaProductos = listOf(
