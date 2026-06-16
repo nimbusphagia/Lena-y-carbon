@@ -6,29 +6,39 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.lenaycarbon.data.dto.EstadoPedido
 
 @Composable
-fun SeguimientoScreen(pedidoId: Int?, navController: NavController) {
-    // Datos de prueba simulando el DTO Pedido de tu grupo
-    val codigoPedido = pedidoId ?: 123
-    val estadoActual = EstadoPedido.EN_PREPARACION // Estado del enum de tu grupo
-    val montoTotal = "S/ 72.90"
+fun SeguimientoScreen(
+    pedidoId: Int?,
+    navController: NavController,
+    viewModel: SeguimientoViewModel = viewModel()
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    // Mapeamos los enums reales de tu grupo a textos amigables en español
+    LaunchedEffect(pedidoId) {
+        if (pedidoId != null) {
+            viewModel.cargarPedido(pedidoId)
+        }
+    }
+
     val listaEstados = listOf(
         EstadoPedido.REGISTRADO to "Registrado",
         EstadoPedido.CONFIRMADO to "Confirmado",
         EstadoPedido.EN_PREPARACION to "En preparación",
         EstadoPedido.EN_REPARTO to "En reparto",
-        EstadoPedido.ENTREGADO to "Entregado"
+        EstadoPedido.ENTREGADO to "Entregado",
+        EstadoPedido.CANCELADO to "Cancelado"
     )
 
     Column(
@@ -38,103 +48,116 @@ fun SeguimientoScreen(pedidoId: Int?, navController: NavController) {
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-        ) {
-            Column(modifier = Modifier.padding(20.dp)) {
-                Text(
-                    text = "Código de Orden: #$codigoPedido",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
+        // CARGANDO? SE MUESTRA LA RUEDITA
+        if (uiState.isLoading || uiState.pedido == null) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+            }
+        } else {
+            // EXTRAEMOS EL PEDIDO
+            val pedido = uiState.pedido!!
 
-                Spacer(modifier = Modifier.height(4.dp))
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            ) {
+                Column(modifier = Modifier.padding(20.dp)) {
+                    Text(
+                        text = "Código de Orden: #${pedido.codigo}",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
 
-                // Traducimos el estado actual del enum para mostrarlo arriba
-                val textoEstadoActual = listaEstados.find { it.first == estadoActual }?.second ?: "Desconocido"
-                Text(
-                    text = "Estado: $textoEstadoActual",
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                    Spacer(modifier = Modifier.height(4.dp))
 
-                Spacer(modifier = Modifier.height(16.dp))
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-                Spacer(modifier = Modifier.height(16.dp))
+                    val textoEstadoActual = listaEstados.find { it.first == pedido.estado }?.second ?: "Desconocido"
+                    Text(
+                        text = "Estado: $textoEstadoActual",
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
 
-                Text(
-                    text = "Línea de tiempo del pedido:",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "Línea de tiempo del pedido:",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
 
-                // Dibujamos el flujo basado en el enum de tu grupo
-                listaEstados.forEachIndexed { index, parEstado ->
-                    val enumEstado = parEstado.first
-                    val textoEstado = parEstado.second
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                    val esEstadoActual = (enumEstado == estadoActual)
-                    val yaPaso = index <= listaEstados.indexOf(listaEstados.find { it.first == estadoActual })
+                    listaEstados.forEachIndexed { index, parEstado ->
+                        val enumEstado = parEstado.first
+                        val textoEstado = parEstado.second
+
+                        val esEstadoActual = (enumEstado == pedido.estado)
+                        val yaPaso = index <= listaEstados.indexOf(listaEstados.find { it.first == pedido.estado })
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(18.dp)
+                                    .background(
+                                        color = when {
+                                            esEstadoActual -> MaterialTheme.colorScheme.primary
+                                            yaPaso -> MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+                                            else -> MaterialTheme.colorScheme.outline
+                                        },
+                                        shape = CircleShape
+                                    )
+                            )
+
+                            Spacer(modifier = Modifier.width(16.dp))
+
+                            Text(
+                                text = textoEstado,
+                                fontSize = 16.sp,
+                                fontWeight = if (esEstadoActual) FontWeight.Bold else FontWeight.Normal,
+                                color = if (esEstadoActual) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+                    Spacer(modifier = Modifier.height(16.dp))
 
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .size(18.dp)
-                                .background(
-                                    color = when {
-                                        esEstadoActual -> MaterialTheme.colorScheme.primary
-                                        yaPaso -> MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
-                                        else -> MaterialTheme.colorScheme.outline
-                                    },
-                                    shape = CircleShape
-                                )
-                        )
-
-                        Spacer(modifier = Modifier.width(16.dp))
-
+                        Text(text = "Total Pagado:", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                         Text(
-                            text = textoEstado,
-                            fontSize = 16.sp,
-                            fontWeight = if (esEstadoActual) FontWeight.Bold else FontWeight.Normal,
-                            color = if (esEstadoActual) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                            text = "S/ ${pedido.total}",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
-
-                Spacer(modifier = Modifier.height(16.dp))
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(text = "Total Pagado:", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                    Text(text = montoTotal, fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, color = MaterialTheme.colorScheme.primary)
-                }
             }
-        }
 
-        Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.weight(1f))
 
-        Button(
-            onClick = { navController.popBackStack() },
-            modifier = Modifier.fillMaxWidth().height(48.dp)
-        ) {
-            Text(text = "Volver al Inicio", fontWeight = FontWeight.Bold)
+            Button(
+                onClick = { navController.popBackStack() },
+                modifier = Modifier.fillMaxWidth().height(48.dp)
+            ) {
+                Text(text = "Volver al Inicio", fontWeight = FontWeight.Bold)
+            }
         }
     }
 }

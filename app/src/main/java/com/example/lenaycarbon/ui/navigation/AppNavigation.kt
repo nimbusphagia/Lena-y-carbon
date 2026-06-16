@@ -90,6 +90,21 @@ fun AppNavigation() {
                     )
                 }
 
+                // ---> (FABRIZIO) Aqui el integrado de "estado del pedido})
+                currentRoute?.startsWith("seguimiento") == true -> {
+                    TopAppBar(
+                        title = { Text("Estado de tu Pedido") },
+                        navigationIcon = {
+                            IconButton(onClick = { navController.popBackStack() }) {
+                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
+                            }
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        )
+                    )
+                }
+                // ------------------- Hasta aca -------------------
             }
         }
     ) { innerPadding ->
@@ -107,6 +122,7 @@ fun AppNavigation() {
             }
             composable(Routes.LOGIN) { LoginScreen(onLoginSuccess = {navController.navigate(Routes.HOME)}) }
             composable(Routes.HOME) { HomeScreen(navController) }
+
             composable(Routes.DETAIL) { backStackEntry ->
                 val productoId = backStackEntry.arguments
                     ?.getString("productoId")
@@ -116,6 +132,7 @@ fun AppNavigation() {
                     nav = navController
                 )
             }
+
             composable(Routes.DELIVERYTYPE){ backStackEntry ->
                 val totalCarrito = backStackEntry.arguments
                     ?.getString("totalCarrito")
@@ -124,8 +141,21 @@ fun AppNavigation() {
                     totalCarrito = totalCarrito,
                     nav = navController
                 )
-
             }
+
+            // (FABRIZIO) > Aqui registro la pantalla de seguimiento
+            composable(Routes.SEGUIMIENTO) { backStackEntry ->
+                val pedidoId = backStackEntry.arguments
+                    ?.getString("pedidoId")
+                    ?.toIntOrNull()
+
+                // (FABRIZIO) Llamo al archivo SeguimientoScreen
+                com.example.lenaycarbon.ui.seguimiento.SeguimientoScreen(
+                    pedidoId = pedidoId,
+                    navController = navController
+                )
+            }
+            // ---> -------------------------  <---
         }
     }
 }
