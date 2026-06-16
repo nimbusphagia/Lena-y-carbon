@@ -17,7 +17,7 @@ import androidx.room.PrimaryKey
             onUpdate = ForeignKey.CASCADE
         )
     ],
-    indices = [Index(value = ["idCategoria"])] // R
+    indices = [Index(value = ["idCategoria"])]
 )
 data class Producto(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,

@@ -14,7 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Database(
-    entities = [Producto::class, CategoriaProducto::class], version = 1, exportSchema = false
+    entities = [Producto::class, CategoriaProducto::class], version = 2, exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
 

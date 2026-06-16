@@ -47,12 +47,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         initialValue = emptyList()
     )
 
-    init {
-        viewModelScope.launch {
-            repository.inicializarSiEstaVacia()
-        }
-    }
-
     fun seleccionarCategoria(id: Int?) {
         _categoriaSeleccionada.value = id
         _busqueda.value = ""

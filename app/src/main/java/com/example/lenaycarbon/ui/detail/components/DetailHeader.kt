@@ -1,16 +1,11 @@
 package com.example.lenaycarbon.ui.detail.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -21,12 +16,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.lenaycarbon.data.local.entity.Producto
+import com.example.lenaycarbon.ui.utils.getDrawableId
 
 @Composable
 fun DetailHeader(producto: Producto) {
     Box {
         Image(
-            painter = painterResource(id = producto.imagen),
+            painter = painterResource(id = getDrawableId(producto.imagen)),
             contentDescription = producto.nombre,
             modifier = Modifier
                 .fillMaxWidth()

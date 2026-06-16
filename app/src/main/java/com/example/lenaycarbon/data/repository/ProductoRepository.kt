@@ -4,8 +4,6 @@ import android.content.Context
 import com.example.lenaycarbon.data.local.entity.CategoriaProducto
 import com.example.lenaycarbon.data.local.entity.Producto
 import com.example.lenaycarbon.data.local.AppDatabase
-import com.example.lenaycarbon.data.mockup.listaCategorias
-import com.example.lenaycarbon.data.mockup.listaProductos
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -25,15 +23,4 @@ class ProductoRepository(context: Context) {
     // Categorías
     fun obtenerCategorias(): Flow<List<CategoriaProducto>> = categoriaDao.obtenerCategoriasActivas()
 
-    // Inicialización conjunta
-    suspend fun inicializarSiEstaVacia() {
-        withContext(Dispatchers.IO) {
-            if (categoriaDao.contarCategorias() == 0L) {
-                categoriaDao.insertarCategorias(listaCategorias)
-            }
-            if (productoDao.contarProductos() == 0L) {
-                productoDao.insertarProductos(listaProductos)
-            }
-        }
-    }
 }

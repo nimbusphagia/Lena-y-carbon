@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,17 +22,28 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.lenaycarbon.data.mockup.listaCategorias
-import com.example.lenaycarbon.data.mockup.listaProductos
 import com.example.lenaycarbon.ui.detail.components.DetailCantidad
 import com.example.lenaycarbon.ui.detail.components.DetailHeader
+import com.example.lenaycarbon.viewmodel.DetailViewModel
 
 @Composable
 fun DetailScreen(productoId: Int?, nav: NavController) {
-    val producto = listaProductos.find { it.id == productoId }
-    var cantidad by remember { mutableIntStateOf(1) }
+    val viewModel: DetailViewModel = viewModel()
+    val productos by viewModel.productos.collectAsStateWithLifecycle()
+    val categorias by viewModel.categorias.collectAsStateWithLifecycle()
 
+    val producto = productos.find { it.id == productoId }
+    val categoria = categorias.find { it.id == producto?.idCategoria }
+    var cantidad by remember { mutableIntStateOf(1) }
+    if (productos.isEmpty()) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
+        return
+    }
     if (producto == null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text("Producto no encontrado")
@@ -47,7 +59,7 @@ fun DetailScreen(productoId: Int?, nav: NavController) {
                 .padding(20.dp)
         ) {
             Text(
-                text = listaCategorias.find { it.id == producto.idCategoria }?.nombre ?: "",
+                text = categoria?.nombre ?: "",
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -70,8 +82,8 @@ fun DetailScreen(productoId: Int?, nav: NavController) {
                 precio = producto.precio,
                 cantidad = cantidad,
                 onIncrementar = { cantidad++ },
-                onDecrementar = { if (cantidad > 1)
-            Spacelr(modifier = Modifier.weight(1f))
+                onDecrementar = { if (cantidad > 1) cantidad-- })
+            Spacer(modifier = Modifier.weight(1f))
             Button(
                 onClick = { },
                 modifier = Modifier

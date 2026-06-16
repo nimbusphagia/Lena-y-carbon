@@ -12,7 +12,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.lenaycarbon.data.mockup.listaCategorias
 import com.example.lenaycarbon.ui.home.components.Catalogo
 import com.example.lenaycarbon.ui.navigation.Routes
 import com.example.lenaycarbon.viewmodel.HomeViewModel
