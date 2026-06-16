@@ -18,12 +18,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.lenaycarbon.data.dto.Producto
-import com.example.lenaycarbon.data.mockup.listaCategorias
+import com.example.lenaycarbon.data.local.entity.CategoriaProducto
+import com.example.lenaycarbon.data.local.entity.Producto
+import com.example.lenaycarbon.ui.utils.getDrawableId
 
 @Composable
 fun ProductoCard(
-    producto: Producto, onClick: () -> Unit
+    producto: Producto,
+    categoria: CategoriaProducto?,
+    onClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -36,7 +39,7 @@ fun ProductoCard(
         Column {
             Box {
                 Image(
-                    painter = painterResource(id = producto.imagen),
+                    painter = painterResource(id = getDrawableId(producto.imagen)),
                     contentDescription = producto.nombre,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -93,9 +96,9 @@ fun ProductoCard(
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold
                     )
-                    listaCategorias.find { categoria -> categoria.id == producto.idCategoria }?.nombre?.let {
+                    categoria?.let {
                         Text(
-                            text = it,
+                            text = it.nombre,
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

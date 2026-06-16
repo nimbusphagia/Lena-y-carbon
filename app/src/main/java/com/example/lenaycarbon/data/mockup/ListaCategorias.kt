@@ -1,6 +1,6 @@
 package com.example.lenaycarbon.data.mockup
 
-import com.example.lenaycarbon.data.dto.CategoriaProducto
+import com.example.lenaycarbon.data.local.entity.CategoriaProducto
 
 val listaCategorias = listOf(
     CategoriaProducto(

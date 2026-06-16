@@ -70,8 +70,8 @@ fun DetailScreen(productoId: Int?, nav: NavController) {
                 precio = producto.precio,
                 cantidad = cantidad,
                 onIncrementar = { cantidad++ },
-                onDecrementar = { if (cantidad > 1) cantidad-- })
-            Spacer(modifier = Modifier.weight(1f))
+                onDecrementar = { if (cantidad > 1)
+            Spacelr(modifier = Modifier.weight(1f))
             Button(
                 onClick = { },
                 modifier = Modifier

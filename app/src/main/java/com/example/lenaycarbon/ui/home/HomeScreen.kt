@@ -15,6 +15,7 @@ import androidx.navigation.NavController
 import com.example.lenaycarbon.data.mockup.listaCategorias
 import com.example.lenaycarbon.ui.home.components.Catalogo
 import com.example.lenaycarbon.ui.navigation.Routes
+import com.example.lenaycarbon.viewmodel.HomeViewModel
 
 @Composable
 fun HomeScreen(nav: NavController) {
@@ -23,8 +24,7 @@ fun HomeScreen(nav: NavController) {
     val productos by viewModel.productos.collectAsStateWithLifecycle()
     val categoriaId by viewModel.categoriaSeleccionada.collectAsStateWithLifecycle()
     val busqueda by viewModel.busqueda.collectAsStateWithLifecycle()
-    // Si tienes categorías en el VM, obsérvalas aquí. Si son fijas, usa listaCategorias directo.
-    val categorias = listaCategorias
+    val categorias by viewModel.categorias.collectAsStateWithLifecycle()
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Button(

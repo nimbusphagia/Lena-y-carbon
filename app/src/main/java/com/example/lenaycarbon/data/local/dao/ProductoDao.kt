@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.lenaycarbon.data.dto.Producto
+import com.example.lenaycarbon.data.local.entity.Producto
 import kotlinx.coroutines.flow.Flow
 
 @Dao

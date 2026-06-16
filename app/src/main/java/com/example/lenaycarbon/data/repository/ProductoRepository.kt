@@ -1,8 +1,8 @@
 package com.example.lenaycarbon.data.repository
 
 import android.content.Context
-import com.example.lenaycarbon.data.dto.CategoriaProducto
-import com.example.lenaycarbon.data.dto.Producto
+import com.example.lenaycarbon.data.local.entity.CategoriaProducto
+import com.example.lenaycarbon.data.local.entity.Producto
 import com.example.lenaycarbon.data.local.AppDatabase
 import com.example.lenaycarbon.data.mockup.listaCategorias
 import com.example.lenaycarbon.data.mockup.listaProductos
@@ -17,7 +17,9 @@ class ProductoRepository(context: Context) {
 
     // Productos
     fun obtenerProductos(): Flow<List<Producto>> = productoDao.obtenerProductosDisponibles()
-    fun obtenerPorCategoria(idCategoria: Int): Flow<List<Producto>> = productoDao.obtenerPorCategoria(idCategoria)
+    fun obtenerPorCategoria(idCategoria: Int): Flow<List<Producto>> =
+        productoDao.obtenerPorCategoria(idCategoria)
+
     fun buscarPorNombre(query: String): Flow<List<Producto>> = productoDao.buscarPorNombre(query)
 
     // Categorías
@@ -26,9 +28,10 @@ class ProductoRepository(context: Context) {
     // Inicialización conjunta
     suspend fun inicializarSiEstaVacia() {
         withContext(Dispatchers.IO) {
-            // Solo inicializamos si AMBAS tablas están vacías
-            if (productoDao.contarProductos() == 0L && categoriaDao.contarCategorias() == 0L) {
+            if (categoriaDao.contarCategorias() == 0L) {
                 categoriaDao.insertarCategorias(listaCategorias)
+            }
+            if (productoDao.contarProductos() == 0L) {
                 productoDao.insertarProductos(listaProductos)
             }
         }

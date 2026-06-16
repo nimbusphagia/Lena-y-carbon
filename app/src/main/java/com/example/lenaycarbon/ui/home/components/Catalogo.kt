@@ -21,18 +21,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.lenaycarbon.data.dto.CategoriaProducto
-import com.example.lenaycarbon.data.dto.Producto
-import com.example.lenaycarbon.data.mockup.listaCategorias
+import com.example.lenaycarbon.data.local.entity.CategoriaProducto
+import com.example.lenaycarbon.data.local.entity.Producto
 
 @Composable
 fun Catalogo(
     catalogo: List<Producto>,
-    categorias: List<CategoriaProducto> = listaCategorias, // Lista de categorías para pintar chips
-    categoriaSeleccionadaId: Int? = null,                  // ID seleccionado desde VM
-    busqueda: String = "",                                 // Texto búsqueda desde VM
-    onCategoriaChange: (Int?) -> Unit,                     // Callback al VM
-    onSearchChange: (String) -> Unit,                      // Callback al VM
+    categorias: List<CategoriaProducto>,
+    categoriaSeleccionadaId: Int? = null,
+    busqueda: String = "",
+    onCategoriaChange: (Int?) -> Unit,
+    onSearchChange: (String) -> Unit,
     nav: NavController
 ) {
     Column(
@@ -40,10 +39,9 @@ fun Catalogo(
             .fillMaxSize()
             .padding(horizontal = 16.dp)
     ) {
-        // Campo de búsqueda controlado externamente
         OutlinedTextField(
             value = busqueda,
-            onValueChange = onSearchChange, // Llama al ViewModel, NO cambia estado local
+            onValueChange = onSearchChange,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 12.dp),
@@ -52,8 +50,6 @@ fun Catalogo(
             singleLine = true,
             shape = RoundedCornerShape(12.dp)
         )
-
-        // Chips de categorías controlados externamente
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(bottom = 12.dp)
@@ -62,22 +58,16 @@ fun Catalogo(
                 FilterChip(
                     selected = categoriaSeleccionadaId == null,
                     onClick = { onCategoriaChange(null) },
-                    label = { Text("Todos") }
-                )
+                    label = { Text("Todos") })
             }
             items(categorias) { categoria ->
-                FilterChip(
-                    selected = categoriaSeleccionadaId == categoria.id,
-                    onClick = {
-                        val nuevaId = if (categoriaSeleccionadaId == categoria.id) null else categoria.id
-                        onCategoriaChange(nuevaId)
-                    },
-                    label = { Text(categoria.nombre) }
-                )
+                FilterChip(selected = categoriaSeleccionadaId == categoria.id, onClick = {
+                    val nuevaId =
+                        if (categoriaSeleccionadaId == categoria.id) null else categoria.id
+                    onCategoriaChange(nuevaId)
+                }, label = { Text(categoria.nombre) })
             }
         }
-
-        // Lista reactiva (ya viene filtrada desde el ViewModel)
         if (catalogo.isEmpty()) {
             Text(
                 text = "No se encontraron productos",
@@ -90,8 +80,8 @@ fun Catalogo(
                 items(catalogo) { producto ->
                     ProductoCard(
                         producto = producto,
-                        onClick = { nav.navigate("detail/${producto.id}") }
-                    )
+                        categoria = categorias.find { it.id == producto.idCategoria },
+                        onClick = { nav.navigate("detail/${producto.id}") })
                 }
             }
         }

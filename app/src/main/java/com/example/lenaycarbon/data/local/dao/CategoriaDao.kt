@@ -4,11 +4,14 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.lenaycarbon.data.dto.CategoriaProducto
+import com.example.lenaycarbon.data.local.entity.CategoriaProducto
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CategoriaDao {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertarCategoria(categoria: CategoriaProducto): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertarCategorias(categorias: List<CategoriaProducto>)
@@ -18,4 +21,6 @@ interface CategoriaDao {
 
     @Query("SELECT COUNT(*) FROM categorias")
     suspend fun contarCategorias(): Long
+
+
 }
