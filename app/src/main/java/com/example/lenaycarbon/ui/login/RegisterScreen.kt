@@ -4,14 +4,15 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -31,8 +32,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import com.example.lenaycarbon.R
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -40,50 +39,63 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.lenaycarbon.R
 import com.example.lenaycarbon.ui.theme.AppPrimaryOrange
 import com.example.lenaycarbon.ui.theme.LenaYCarbonTheme
 import com.example.lenaycarbon.viewmodel.AuthViewModel
 
 @Composable
-fun LoginScreen(
+fun RegisterScreen(
     modifier: Modifier = Modifier,
     authViewModel: AuthViewModel,
-    onLoginSuccess: () -> Unit,
-    onRegisterClick: () -> Unit
+    onRegisterSuccess: () -> Unit,
+    onBackToLogin: () -> Unit
 ) {
     var correo by remember { mutableStateOf("") }
     var contrasena by remember { mutableStateOf("") }
+    var confirmarContrasena by remember { mutableStateOf("") }
 
-    var mostrarError by remember { mutableStateOf(false) }
-    var mensajeError by remember { mutableStateOf("") }
+    var mostrarDialogo by remember { mutableStateOf(false) }
+    var mensajeDialogo by remember { mutableStateOf("") }
+    var registroExitoso by remember { mutableStateOf(false) }
 
-    val context = LocalContext.current
+    val scrollState = rememberScrollState()
 
     Scaffold { padding ->
         Column(
             modifier = modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(horizontal = 32.dp),
+                .padding(horizontal = 32.dp)
+                .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
 
+            Spacer(modifier = Modifier.height(20.dp))
+
             Image(
                 painter = painterResource(id = R.drawable.logo_lenaycarbon),
                 contentDescription = "Logo",
-                modifier = Modifier.size(160.dp)
+                modifier = Modifier.size(150.dp)
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = "Leña y Carbón\nAPP",
+                text = "Crear Cuenta",
                 color = AppPrimaryOrange,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+
+            Text(
+                text = "Regístrate para realizar tus pedidos",
+                color = Color.Gray,
+                fontSize = 14.sp,
                 textAlign = TextAlign.Center,
-                lineHeight = 34.sp
+                modifier = Modifier.padding(top = 4.dp)
             )
 
             Spacer(modifier = Modifier.height(30.dp))
@@ -91,7 +103,7 @@ fun LoginScreen(
             // Campo: Correo
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "Correo",
+                    text = "Correo Electrónico",
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp,
                     color = Color.Black,
@@ -113,7 +125,7 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-
+            // Campo: Contraseña
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     text = "Contraseña",
@@ -137,6 +149,32 @@ fun LoginScreen(
                 )
             }
 
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Campo: Confirmar Contraseña
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = "Confirmar Contraseña",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    color = Color.Black,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+                OutlinedTextField(
+                    value = confirmarContrasena,
+                    onValueChange = { confirmarContrasena = it },
+                    placeholder = { Text("*********", color = Color.Gray) },
+                    singleLine = true,
+                    visualTransformation = PasswordVisualTransformation(),
+                    shape = RoundedCornerShape(8.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = AppPrimaryOrange,
+                        unfocusedBorderColor = Color.LightGray
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
             Spacer(modifier = Modifier.height(30.dp))
 
             if (authViewModel.loading) {
@@ -146,72 +184,28 @@ fun LoginScreen(
                 Button(
                     onClick = {
                         val correoTrim = correo.trim()
-                        if (correoTrim.isEmpty() || contrasena.isEmpty()) {
-                            mensajeError = "Por favor, llena todos los campos."
-                            mostrarError = true
+                        if (correoTrim.isEmpty() || contrasena.isEmpty() || confirmarContrasena.isEmpty()) {
+                            mensajeDialogo = "Por favor, llena todos los campos."
+                            mostrarDialogo = true
                         } else if (!correoTrim.contains("@") || !correoTrim.contains(".")) {
-                            mensajeError = "El formato del correo electrónico no es válido."
-                            mostrarError = true
+                            mensajeDialogo = "El formato del correo electrónico no es válido."
+                            mostrarDialogo = true
                         } else if (contrasena.length <= 6) {
-                            mensajeError = "La contraseña debe tener más de 6 caracteres."
-                            mostrarError = true
+                            mensajeDialogo = "La contraseña debe tener más de 6 caracteres."
+                            mostrarDialogo = true
+                        } else if (contrasena != confirmarContrasena) {
+                            mensajeDialogo = "Las contraseñas no coinciden."
+                            mostrarDialogo = true
                         } else {
-                            authViewModel.login(correoTrim, contrasena) {
-                                onLoginSuccess()
+                            authViewModel.register(correoTrim, contrasena) {
+                                mensajeDialogo = "Registro exitoso."
+                                registroExitoso = true
+                                mostrarDialogo = true
                             }
                         }
                     },
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = AppPrimaryOrange),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp)
-                ) {
-                    Text(
-                        text = "INGRESAR",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                OutlinedButton(
-                    onClick = {
-                        authViewModel.loginGoogle(context) {
-                            onLoginSuccess()
-                        }
-                    },
-                    shape = RoundedCornerShape(8.dp),
-                    border = BorderStroke(1.dp, Color(0xFFDADCE0)),
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        containerColor = Color.White,
-                        contentColor = Color(0xFF3C4043)
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp)
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = "Iniciar sesión con Google",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp,
-                            color = Color(0xFF3C4043)
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                OutlinedButton(
-                    onClick = onRegisterClick,
-                    shape = RoundedCornerShape(8.dp),
-                    border = BorderStroke(1.5.dp, AppPrimaryOrange),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = AppPrimaryOrange),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp)
@@ -223,28 +217,55 @@ fun LoginScreen(
                     )
                 }
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedButton(
+                onClick = onBackToLogin,
+                shape = RoundedCornerShape(8.dp),
+                border = BorderStroke(1.5.dp, AppPrimaryOrange),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = AppPrimaryOrange),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+            ) {
+                Text(
+                    text = "VOLVER AL LOGIN",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 
+    // Monitorear mensajes de error externos desde el ViewModel
     LaunchedEffect(authViewModel.message) {
         if (authViewModel.message.isNotEmpty()) {
-            mensajeError = authViewModel.message
-            mostrarError = true
+            mensajeDialogo = authViewModel.message
+            mostrarDialogo = true
         }
     }
 
-    if (mostrarError) {
+    if (mostrarDialogo) {
         AlertDialog(
             onDismissRequest = { 
-                mostrarError = false
+                mostrarDialogo = false
                 authViewModel.clearMessage()
+                if (registroExitoso) {
+                    onRegisterSuccess()
+                }
             },
-            title = { Text("Autenticación") },
-            text = { Text(mensajeError) },
+            title = { Text("Registro") },
+            text = { Text(mensajeDialogo) },
             confirmButton = {
                 TextButton(onClick = { 
-                    mostrarError = false
+                    mostrarDialogo = false
                     authViewModel.clearMessage()
+                    if (registroExitoso) {
+                        onRegisterSuccess()
+                    }
                 }) {
                     Text("Ok", color = AppPrimaryOrange)
                 }

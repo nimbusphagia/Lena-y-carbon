@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -22,6 +23,8 @@ import com.example.lenaycarbon.ui.detail.DetailScreen
 import com.example.lenaycarbon.ui.home.HomeScreen
 import com.example.lenaycarbon.ui.login.LoginScreen
 import com.example.lenaycarbon.ui.login.SplashScreen
+import com.example.lenaycarbon.viewmodel.AuthViewModel
+import com.example.lenaycarbon.ui.login.RegisterScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,6 +32,7 @@ fun AppNavigation() {
     val navController = rememberNavController()
     val currentBackStack by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStack?.destination?.route
+    val authViewModel: AuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 
     Scaffold(
         topBar = {
@@ -46,6 +50,20 @@ fun AppNavigation() {
                                     text = "¿Qué vas a pedir hoy?",
                                     style = MaterialTheme.typography.labelSmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        },
+                        actions = {
+                            IconButton(onClick = {
+                                authViewModel.logout(showMessage = true) {
+                                    navController.navigate(Routes.LOGIN) {
+                                        popUpTo(0) { inclusive = true }
+                                    }
+                                }
+                            }) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.ExitToApp,
+                                    contentDescription = "Cerrar sesión"
                                 )
                             }
                         },
@@ -115,12 +133,41 @@ fun AppNavigation() {
         ) {
             composable(Routes.SPLASH) {
                 SplashScreen(onSplashFinished = {
-                    navController.navigate(Routes.LOGIN) {
-                        popUpTo(Routes.SPLASH) { inclusive = true }
+                    authViewModel.logout(showMessage = false) {
+                        navController.navigate(Routes.LOGIN) {
+                            popUpTo(Routes.SPLASH) { inclusive = true }
+                        }
                     }
                 })
             }
-            composable(Routes.LOGIN) { LoginScreen(onLoginSuccess = {navController.navigate(Routes.HOME)}) }
+            composable(Routes.LOGIN) {
+                LoginScreen(
+                    authViewModel = authViewModel,
+                    onLoginSuccess = {
+                        navController.navigate(Routes.HOME) {
+                            popUpTo(Routes.LOGIN) { inclusive = true }
+                        }
+                    },
+                    onRegisterClick = {
+                        navController.navigate(Routes.REGISTER)
+                    }
+                )
+            }
+            composable(Routes.REGISTER) {
+                RegisterScreen(
+                    authViewModel = authViewModel,
+                    onRegisterSuccess = {
+                        authViewModel.logout(showMessage = false) {
+                            navController.navigate(Routes.LOGIN) {
+                                popUpTo(Routes.REGISTER) { inclusive = true }
+                            }
+                        }
+                    },
+                    onBackToLogin = {
+                        navController.popBackStack()
+                    }
+                )
+            }
             composable(Routes.HOME) { HomeScreen(navController) }
 
             composable(Routes.DETAIL) { backStackEntry ->
