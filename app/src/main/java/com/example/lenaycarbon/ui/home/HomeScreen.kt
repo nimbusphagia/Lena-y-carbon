@@ -14,6 +14,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.lenaycarbon.ui.home.components.Catalogo
 import com.example.lenaycarbon.ui.navigation.Routes
+import com.example.lenaycarbon.ui.navigation.Routes.confirmacionRoute
 import com.example.lenaycarbon.viewmodel.HomeViewModel
 
 @Composable

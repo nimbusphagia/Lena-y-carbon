@@ -5,7 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lenaycarbon.data.dto.EstadoPedido
 import com.example.lenaycarbon.data.dto.Pedido
-import com.example.lenaycarbon.data.dto.TipoPago
+import com.example.lenaycarbon.data.local.entity.TipoPago
 //CUANDO CREEN PedidoRepository
 // import com.example.lenaycarbon.data.repository.PedidoRepository
 import kotlinx.coroutines.delay

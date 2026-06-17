@@ -17,7 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.compose.*
-import com.example.lenaycarbon.ui.deliveryType.DeliverTypeScreen
+import com.example.lenaycarbon.ui.confirmacion.ConfirmacionScreen
 import com.example.lenaycarbon.ui.detail.DetailScreen
 import com.example.lenaycarbon.ui.home.HomeScreen
 import com.example.lenaycarbon.ui.login.LoginScreen
@@ -133,13 +133,13 @@ fun AppNavigation() {
                 )
             }
 
-            composable(Routes.DELIVERYTYPE){ backStackEntry ->
-                val totalCarrito = backStackEntry.arguments
-                    ?.getString("totalCarrito")
-                    ?.toDoubleOrNull()
-                DeliverTypeScreen(
-                    totalCarrito = totalCarrito,
-                    nav = navController
+            composable(Routes.CONFIRMACION){ backStackEntry ->
+                val pedidoId = backStackEntry.arguments
+                    ?.getString("pedidoSubtotal")
+                    ?.toIntOrNull()
+                ConfirmacionScreen(
+                    pedidoId = pedidoId,
+                    nav = navController,
                 )
             }
 

@@ -1,23 +1,21 @@
-package com.example.lenaycarbon.ui.deliveryType
+package com.example.lenaycarbon.ui.confirmacion
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,31 +24,34 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.lenaycarbon.data.mockup.listaTiposPago
-import com.example.lenaycarbon.data.mockup.listaTipoEntrega
-import com.example.lenaycarbon.ui.deliveryType.components.InStorePickUp
-import com.example.lenaycarbon.ui.deliveryType.components.SelectDeliveryType
-import com.example.lenaycarbon.ui.deliveryType.components.SelectPaymentType
-import com.example.lenaycarbon.ui.deliveryType.components.SetAddres
-import com.example.lenaycarbon.ui.deliveryType.components.TotalCalculator
+import com.example.lenaycarbon.viewmodel.ConfirmacionViewModel
+import com.example.lenaycarbon.ui.confirmacion.components.InStorePickUp
+import com.example.lenaycarbon.ui.confirmacion.components.SelectDeliveryType
+import com.example.lenaycarbon.ui.confirmacion.components.SelectPaymentType
+import com.example.lenaycarbon.ui.confirmacion.components.SetAddres
+import com.example.lenaycarbon.ui.confirmacion.components.TotalCalculator
 import com.example.lenaycarbon.ui.theme.AppPrimaryOrange
+import com.example.lenaycarbon.viewmodel.HomeViewModel
 
 @Composable
-fun DeliverTypeScreen(nav: NavController, totalCarrito: Double?){
+fun ConfirmacionScreen(
+    pedidoId: Int?,
+    nav: NavController
+){
+    val viewModel: ConfirmacionViewModel = viewModel()
+    val tiposEntrega by viewModel.listaTipoEntrega.collectAsState()
 
-    var tipoEntrega by remember {
-        mutableStateOf(listaTipoEntrega[0])
-    }
     var lugarEntrega by remember {
         mutableStateOf("")
     }
-    var tipoPago by remember {
-        mutableStateOf(listaTiposPago[0])
-    }
 
-    //Se debe aplicar validación anterior para que no se reciba null
-    val totalCarrito: Double = totalCarrito ?: 0.00
+    val tiposPago by viewModel.listaTipoPago.collectAsState()
+
+    val pedidoPrueba = 12345
+    val pedidoSubtotal = 20.00
+
 
     Column(
         modifier = Modifier
@@ -73,16 +74,18 @@ fun DeliverTypeScreen(nav: NavController, totalCarrito: Double?){
         Spacer(Modifier.height(15.dp))
 
         SelectDeliveryType(
-            tipoEntrega = tipoEntrega,
-            actualizarTipoEntrega = {tipoEntrega = it}
+            tipoEntrega = viewModel.tipoEntregaSeleccionada,
+            actualizarTipoEntrega = {viewModel.actualizarTipoEntrega(it)},
+            listaTipoEntrega = tiposEntrega
         )
 
         Spacer(Modifier.height(10.dp))
 
-        when(tipoEntrega.id) {
-            1-> InStorePickUp()
+        when(viewModel.tipoEntregaSeleccionada?.id) {
 
-            2 -> SetAddres(
+            2-> InStorePickUp()
+
+            1 -> SetAddres(
                 lugarEntrega = lugarEntrega,
                 actualizarLugarEntrega = {
                     lugarEntrega = it
@@ -91,15 +94,17 @@ fun DeliverTypeScreen(nav: NavController, totalCarrito: Double?){
 
         Spacer(Modifier.height(10.dp))
 
-        SelectPaymentType(tipoPago,
+        SelectPaymentType( viewModel.tipoPagoSeleccionado,
             actualizarTipoPago = {
-                tipoPago = it
-            })
+                viewModel.actualizarTipoPago(it)
+            },
+            listaTiposPago = tiposPago
+            )
 
         Spacer(Modifier.height(10.dp))
 
-        TotalCalculator(subTotal = totalCarrito,
-            tipoEntrega.precio
+        TotalCalculator(subTotal = pedidoSubtotal,
+            viewModel.tipoEntregaSeleccionada?.precio ?: 0.00
         )
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -110,7 +115,7 @@ fun DeliverTypeScreen(nav: NavController, totalCarrito: Double?){
 
             Button(
                 onClick = {
-                    // Confirmar pedido
+                    nav.navigate("seguimiento/${pedidoPrueba}")
                 },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = AppPrimaryOrange),
@@ -125,9 +130,7 @@ fun DeliverTypeScreen(nav: NavController, totalCarrito: Double?){
             }
 
             OutlinedButton(
-                onClick = {
-                    nav.popBackStack()
-                },
+                onClick = {nav.popBackStack()},
                 border = BorderStroke(1.5.dp, AppPrimaryOrange),
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.outlinedButtonColors(contentColor = AppPrimaryOrange),

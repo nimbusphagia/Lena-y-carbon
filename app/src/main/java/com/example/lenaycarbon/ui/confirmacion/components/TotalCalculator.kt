@@ -1,4 +1,4 @@
-package com.example.lenaycarbon.ui.deliveryType.components
+package com.example.lenaycarbon.ui.confirmacion.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.sp
 
 
 @Composable
-fun TotalCalculator(subTotal: Double, tarifaTipoEntrega : Double){
+fun TotalCalculator(subTotal: Double, tarifaTipoEntrega : Double?){
 
     Column(
         modifier = Modifier.fillMaxWidth().
@@ -76,7 +76,7 @@ fun TotalCalculator(subTotal: Double, tarifaTipoEntrega : Double){
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "S/.%.2f".format(subTotal + tarifaTipoEntrega),
+                    text = "S/.%.2f".format(subTotal + (tarifaTipoEntrega ?: 0.00)),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp

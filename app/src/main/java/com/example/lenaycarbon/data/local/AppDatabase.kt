@@ -5,6 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.lenaycarbon.R
+import com.example.lenaycarbon.data.local.entity.TipoEntrega
+import com.example.lenaycarbon.data.local.dao.TipoEntregaDao
+import com.example.lenaycarbon.data.local.entity.TipoPago
+import com.example.lenaycarbon.data.local.dao.TipoPagoDao
 import com.example.lenaycarbon.data.local.entity.CategoriaProducto
 import com.example.lenaycarbon.data.local.entity.Producto
 import com.example.lenaycarbon.data.local.dao.CategoriaDao
@@ -14,12 +19,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Database(
-    entities = [Producto::class, CategoriaProducto::class], version = 2, exportSchema = false
+    entities = [Producto::class, CategoriaProducto::class,TipoEntrega::class, TipoPago::class], version = 2, exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun productoDao(): ProductoDao
     abstract fun categoriaDao(): CategoriaDao
+
+    abstract fun tipoEntregaDao(): TipoEntregaDao
+    abstract fun tipoPagoDao(): TipoPagoDao
 
     companion object {
         @Volatile
@@ -130,6 +138,40 @@ abstract class AppDatabase : RoomDatabase() {
                                         ),
                                     )
                                 )
+
+                                //Tipo de entrega
+
+                                database.tipoEntregaDao().insertTipoEntrega(
+                                    TipoEntrega(
+                                            nombre = "Delivery",
+                                            precio = 5.0,
+                                            imagen = R.drawable.deliveryicon
+                                        )
+                                    )
+                                database.tipoEntregaDao().insertTipoEntrega(
+                                    TipoEntrega(
+                                        nombre = "Recojo en tienda",
+                                        precio = 0.0,
+                                        imagen = R.drawable.iconorestuarant
+                                    )
+                                )
+
+                                //Tipo de pago
+
+                                database.tipoPagoDao().insertTipoPago(
+                                    TipoPago(
+                                        nombre = "Yape",
+                                        imagen = R.drawable.yapeicon
+                                    )
+                                )
+
+                                database.tipoPagoDao().insertTipoPago(
+                                    TipoPago(
+                                        nombre = "Efectivo",
+                                        imagen = R.drawable.efectivoicon
+                                    )
+                                )
+
                             }
                         }
                     }

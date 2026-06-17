@@ -1,4 +1,4 @@
-package com.example.lenaycarbon.ui.deliveryType.components
+package com.example.lenaycarbon.ui.confirmacion.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

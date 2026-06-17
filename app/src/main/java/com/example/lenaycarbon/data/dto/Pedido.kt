@@ -1,5 +1,6 @@
 package com.example.lenaycarbon.data.dto
 
+import com.example.lenaycarbon.data.local.entity.TipoPago
 import java.util.Date
 
 data class Pedido(
@@ -12,5 +13,5 @@ data class Pedido(
     val total:Double,
     val observacion: String,
     val fechaPedido: Date,
-    val tipoPago:TipoPago
+    val tipoPago: TipoPago
 )
