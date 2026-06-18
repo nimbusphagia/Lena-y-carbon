@@ -129,19 +129,13 @@ fun AppNavigation() {
                     )
                 }
 
-                currentRoute?.startsWith("deliveryType") == true -> {
+                currentRoute == Routes.CONFIRMACION -> {
                     TopAppBar(
-                        title = {
-                            Column {
-                                Text(
-                                    text = "Leña y Carbón",
-                                    style = MaterialTheme.typography.titleLarge,
-                                    fontWeight = FontWeight.Bold
-                                )
-                                Text(
-                                    text = "¿Cómo te llevarás tu pedido?",
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                        title = { Text("Confirmar Pedido") }, navigationIcon = {
+                            IconButton(onClick = { navController.popBackStack() }) {
+                                Icon(
+                                    Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = "Volver"
                                 )
                             }
                         }, colors = TopAppBarDefaults.topAppBarColors(

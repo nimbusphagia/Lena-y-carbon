@@ -6,6 +6,5 @@ enum class EstadoPedido {
     EN_PREPARACION,
     EN_REPARTO,
     ENTREGADO,
-
     CANCELADO
 }

@@ -102,7 +102,7 @@ fun ConfirmacionScreen(
 
         Spacer(Modifier.height(10.dp))
 
-        TotalCalculator(subTotal = pedidoSubtotal,
+        TotalCalculator(subTotal = carritoViewModel.calcularTotal(),
             confirmacionViewModel.tipoEntregaSeleccionada?.precio ?: 0.00
         )
         Spacer(modifier = Modifier.height(10.dp))
@@ -128,20 +128,6 @@ fun ConfirmacionScreen(
 
             }
 
-            OutlinedButton(
-                onClick = {nav.popBackStack()},
-                border = BorderStroke(1.5.dp, AppPrimaryOrange),
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = AppPrimaryOrange),
-            ) {
-                Text(
-                    text = "Regresar",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
-                    modifier = Modifier.padding(6.dp)
-
-                )
-            }
 
 
         }
