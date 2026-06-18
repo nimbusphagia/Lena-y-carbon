@@ -27,10 +27,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.lenaycarbon.ui.detail.components.DetailCantidad
 import com.example.lenaycarbon.ui.detail.components.DetailHeader
+import com.example.lenaycarbon.ui.navigation.Routes
+import com.example.lenaycarbon.viewmodel.CarritoViewModel
 import com.example.lenaycarbon.viewmodel.DetailViewModel
 
 @Composable
-fun DetailScreen(productoId: Int?, nav: NavController) {
+fun DetailScreen(productoId: Int?, nav: NavController, carritoViewModel: CarritoViewModel) {
     val viewModel: DetailViewModel = viewModel()
     val productos by viewModel.productos.collectAsStateWithLifecycle()
     val categorias by viewModel.categorias.collectAsStateWithLifecycle()
@@ -85,7 +87,10 @@ fun DetailScreen(productoId: Int?, nav: NavController) {
                 onDecrementar = { if (cantidad > 1) cantidad-- })
             Spacer(modifier = Modifier.weight(1f))
             Button(
-                onClick = { },
+                onClick = {
+                    carritoViewModel.agregarProducto(producto, cantidad)
+                    nav.popBackStack()
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp),

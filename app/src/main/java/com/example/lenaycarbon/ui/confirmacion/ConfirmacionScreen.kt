@@ -24,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.lenaycarbon.viewmodel.ConfirmacionViewModel
 import com.example.lenaycarbon.ui.confirmacion.components.InStorePickUp
@@ -33,21 +32,21 @@ import com.example.lenaycarbon.ui.confirmacion.components.SelectPaymentType
 import com.example.lenaycarbon.ui.confirmacion.components.SetAddres
 import com.example.lenaycarbon.ui.confirmacion.components.TotalCalculator
 import com.example.lenaycarbon.ui.theme.AppPrimaryOrange
-import com.example.lenaycarbon.viewmodel.HomeViewModel
+import com.example.lenaycarbon.viewmodel.CarritoViewModel
 
 @Composable
 fun ConfirmacionScreen(
-    pedidoId: Int?,
-    nav: NavController
+    nav: NavController,
+    confirmacionViewModel: ConfirmacionViewModel,
+    carritoViewModel: CarritoViewModel,
 ){
-    val viewModel: ConfirmacionViewModel = viewModel()
-    val tiposEntrega by viewModel.listaTipoEntrega.collectAsState()
+    val tiposEntrega by confirmacionViewModel.listaTipoEntrega.collectAsState()
 
     var lugarEntrega by remember {
         mutableStateOf("")
     }
 
-    val tiposPago by viewModel.listaTipoPago.collectAsState()
+    val tiposPago by confirmacionViewModel.listaTipoPago.collectAsState()
 
     val pedidoPrueba = 12345
     val pedidoSubtotal = 20.00
@@ -74,14 +73,14 @@ fun ConfirmacionScreen(
         Spacer(Modifier.height(15.dp))
 
         SelectDeliveryType(
-            tipoEntrega = viewModel.tipoEntregaSeleccionada,
-            actualizarTipoEntrega = {viewModel.actualizarTipoEntrega(it)},
+            tipoEntrega = confirmacionViewModel.tipoEntregaSeleccionada,
+            actualizarTipoEntrega = {confirmacionViewModel.actualizarTipoEntrega(it)},
             listaTipoEntrega = tiposEntrega
         )
 
         Spacer(Modifier.height(10.dp))
 
-        when(viewModel.tipoEntregaSeleccionada?.id) {
+        when(confirmacionViewModel.tipoEntregaSeleccionada?.id) {
 
             2-> InStorePickUp()
 
@@ -94,9 +93,9 @@ fun ConfirmacionScreen(
 
         Spacer(Modifier.height(10.dp))
 
-        SelectPaymentType( viewModel.tipoPagoSeleccionado,
+        SelectPaymentType( confirmacionViewModel.tipoPagoSeleccionado,
             actualizarTipoPago = {
-                viewModel.actualizarTipoPago(it)
+                confirmacionViewModel.actualizarTipoPago(it)
             },
             listaTiposPago = tiposPago
             )
@@ -104,7 +103,7 @@ fun ConfirmacionScreen(
         Spacer(Modifier.height(10.dp))
 
         TotalCalculator(subTotal = pedidoSubtotal,
-            viewModel.tipoEntregaSeleccionada?.precio ?: 0.00
+            confirmacionViewModel.tipoEntregaSeleccionada?.precio ?: 0.00
         )
         Spacer(modifier = Modifier.height(10.dp))
 

@@ -10,26 +10,28 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.lenaycarbon.ui.home.components.Catalogo
 import com.example.lenaycarbon.ui.navigation.Routes
-import com.example.lenaycarbon.ui.navigation.Routes.confirmacionRoute
+import com.example.lenaycarbon.viewmodel.CarritoViewModel
 import com.example.lenaycarbon.viewmodel.HomeViewModel
 
 @Composable
-fun HomeScreen(nav: NavController) {
-    val viewModel: HomeViewModel = viewModel()
+fun HomeScreen(
+    nav: NavController, homeViewModel: HomeViewModel, carritoViewModel: CarritoViewModel
+) {
 
-    val productos by viewModel.productos.collectAsStateWithLifecycle()
-    val categoriaId by viewModel.categoriaSeleccionada.collectAsStateWithLifecycle()
-    val busqueda by viewModel.busqueda.collectAsStateWithLifecycle()
-    val categorias by viewModel.categorias.collectAsStateWithLifecycle()
+    val productos by homeViewModel.productos.collectAsStateWithLifecycle()
+    val categoriaId by homeViewModel.categoriaSeleccionada.collectAsStateWithLifecycle()
+    val busqueda by homeViewModel.busqueda.collectAsStateWithLifecycle()
+    val categorias by homeViewModel.categorias.collectAsStateWithLifecycle()
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Button(
             onClick = { nav.navigate(Routes.seguimientoRoute(12345)) },
-            modifier = Modifier.fillMaxWidth().padding(16.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
         ) {
             Text(text = "PROBAR MI PANTALLA DE SEGUIMIENTO")
         }
@@ -39,8 +41,8 @@ fun HomeScreen(nav: NavController) {
             categorias = categorias,
             categoriaSeleccionadaId = categoriaId,
             busqueda = busqueda,
-            onCategoriaChange = { id -> viewModel.seleccionarCategoria(id) },
-            onSearchChange = { query -> viewModel.buscarPorNombre(query) },
+            onCategoriaChange = { id -> homeViewModel.seleccionarCategoria(id) },
+            onSearchChange = { query -> homeViewModel.buscarPorNombre(query) },
             nav = nav
         )
     }

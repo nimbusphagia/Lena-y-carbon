@@ -11,17 +11,17 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TipoEntregaDao {
     @Insert
-    fun insertTipoEntrega(
+    suspend fun insertTipoEntrega(
         tipoEntrega: TipoEntrega
     )
 
     @Update
-    fun updateTipoEntrega(
+    suspend fun updateTipoEntrega(
         tipoEntrega: TipoEntrega
     )
 
     @Delete
-    fun deleteTipoEntrega(
+    suspend fun deleteTipoEntrega(
         tipoEntrega: TipoEntrega
     )
 

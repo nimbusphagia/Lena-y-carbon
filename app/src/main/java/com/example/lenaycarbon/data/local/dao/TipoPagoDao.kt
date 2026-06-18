@@ -12,17 +12,17 @@ import kotlinx.coroutines.flow.Flow
 interface TipoPagoDao {
 
     @Insert
-    fun insertTipoPago(
+    suspend fun insertTipoPago(
         tipoPago: TipoPago
     )
 
     @Update
-    fun updateTipoPago(
+    suspend fun updateTipoPago(
         tipoPago: TipoPago
     )
 
     @Delete
-    fun deleteTipoPago(
+    suspend fun deleteTipoPago(
         tipoPago: TipoPago
     )
 

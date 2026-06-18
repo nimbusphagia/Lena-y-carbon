@@ -6,12 +6,13 @@ object Routes {
     const val REGISTER = "register"
     const val HOME = "home"
     const val DETAIL = "detail/{productoId}"
+    const val CARRITO = "carrito"
 
     //RUTA A ESTADO DE PEDIDO (FABRIZIO)
     const val SEGUIMIENTO = "seguimiento/{pedidoId}"
 
     //RUTA DE ACCESO A la confirmación de Pedido(brando)
-    const val CONFIRMACION = "confirmacion/{pedidoId}"
+    const val CONFIRMACION = "confirmacion"
 
     // FUNCION DE ESTADO DE PEDIDO (FABRIZIO)
     fun seguimientoRoute(pedidoId: Int):String{
