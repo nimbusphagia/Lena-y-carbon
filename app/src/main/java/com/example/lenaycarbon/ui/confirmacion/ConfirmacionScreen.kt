@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -31,6 +33,7 @@ import com.example.lenaycarbon.ui.confirmacion.components.SelectDeliveryType
 import com.example.lenaycarbon.ui.confirmacion.components.SelectPaymentType
 import com.example.lenaycarbon.ui.confirmacion.components.SetAddres
 import com.example.lenaycarbon.ui.confirmacion.components.TotalCalculator
+import com.example.lenaycarbon.ui.navigation.Routes
 import com.example.lenaycarbon.ui.theme.AppPrimaryOrange
 import com.example.lenaycarbon.viewmodel.CarritoViewModel
 
@@ -56,6 +59,7 @@ fun ConfirmacionScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp)
+            .verticalScroll(rememberScrollState()) // para poder hacer scroll, porque no veia el boton de confirmacion xd
     ) {
         Spacer(Modifier.height(30.dp))
 
@@ -114,7 +118,9 @@ fun ConfirmacionScreen(
 
             Button(
                 onClick = {
-                    nav.navigate("seguimiento/${pedidoPrueba}")
+                    val costoEnvio = confirmacionViewModel.tipoEntregaSeleccionada?.precio?: 0.00
+                    val totalReal = carritoViewModel.calcularTotal() + costoEnvio
+                    nav.navigate(Routes.seguimientoRoute(12345,totalReal))
                 },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = AppPrimaryOrange),

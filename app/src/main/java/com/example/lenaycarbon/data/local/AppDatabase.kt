@@ -14,13 +14,15 @@ import com.example.lenaycarbon.data.local.entity.CategoriaProducto
 import com.example.lenaycarbon.data.local.entity.Producto
 import com.example.lenaycarbon.data.local.dao.CategoriaDao
 import com.example.lenaycarbon.data.local.dao.ProductoDao
+import com.example.lenaycarbon.data.local.dao.PedidoDao
+import com.example.lenaycarbon.data.local.entity.PedidoEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Database(
-    entities = [Producto::class, CategoriaProducto::class, TipoEntrega::class, TipoPago::class],
-    version = 3,
+    entities = [Producto::class, CategoriaProducto::class, TipoEntrega::class, TipoPago::class, PedidoEntity::class],
+    version = 4,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -28,6 +30,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun categoriaDao(): CategoriaDao
     abstract fun tipoEntregaDao(): TipoEntregaDao
     abstract fun tipoPagoDao(): TipoPagoDao
+    abstract fun pedidoDao(): PedidoDao
+
 
     companion object {
         @Volatile

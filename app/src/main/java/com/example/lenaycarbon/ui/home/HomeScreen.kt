@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,16 +27,32 @@ fun HomeScreen(
     val categoriaId by homeViewModel.categoriaSeleccionada.collectAsStateWithLifecycle()
     val busqueda by homeViewModel.busqueda.collectAsStateWithLifecycle()
     val categorias by homeViewModel.categorias.collectAsStateWithLifecycle()
+    val pedidoActivo by homeViewModel.pedidoActivo.collectAsStateWithLifecycle()
 
     Column(modifier = Modifier.fillMaxWidth()) {
-        Button(
+
+        //BOTON CONDICIONAL
+        if (pedidoActivo != null) {
+            Button(
+                onClick = {
+                    nav.navigate(Routes.seguimientoRoute(pedidoActivo!!.id, pedidoActivo!!.total))
+                },
+                modifier = Modifier.fillMaxWidth().padding(8.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
+            ) {
+                Text("Ver estado de mi pedido activo (#${pedidoActivo!!.codigo})")
+            }
+        }
+
+        /** BORRO ESTE BOTON PORQUE NO DEBERIA DE APARECER SEGUIMIENTO DE PEDIDO HASTA QUE SE HAYA CONFIRMADO
+         * Button(
             onClick = { nav.navigate(Routes.seguimientoRoute(12345)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
             Text(text = "PROBAR MI PANTALLA DE SEGUIMIENTO")
-        }
+        }**/
 
         Catalogo(
             catalogo = productos,

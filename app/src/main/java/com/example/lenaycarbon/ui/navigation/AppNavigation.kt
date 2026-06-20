@@ -226,16 +226,15 @@ fun AppNavigation() {
                 )
             }
 
-            // (FABRIZIO) > Aqui registro la pantalla de seguimiento
             composable(Routes.SEGUIMIENTO) { backStackEntry ->
                 val pedidoId = backStackEntry.arguments?.getString("pedidoId")?.toIntOrNull()
-
-                // (FABRIZIO) Llamo al archivo SeguimientoScreen
+                val total = backStackEntry.arguments?.getString("total")?.toDoubleOrNull() ?: 0.0
                 com.example.lenaycarbon.ui.seguimiento.SeguimientoScreen(
-                    pedidoId = pedidoId, navController = navController
+                    pedidoId = pedidoId,
+                    totalReal = total,
+                    navController = navController
                 )
             }
-            // ---> -------------------------  <---
         }
     }
 }

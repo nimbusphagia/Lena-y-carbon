@@ -17,10 +17,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.lenaycarbon.data.dto.EstadoPedido
+import com.example.lenaycarbon.ui.navigation.Routes
+import com.example.lenaycarbon.viewmodel.SeguimientoViewModel
 
 @Composable
 fun SeguimientoScreen(
     pedidoId: Int?,
+    totalReal: Double,
     navController: NavController,
     viewModel: SeguimientoViewModel = viewModel()
 ) {
@@ -28,7 +31,7 @@ fun SeguimientoScreen(
 
     LaunchedEffect(pedidoId) {
         if (pedidoId != null) {
-            viewModel.cargarPedido(pedidoId)
+            viewModel.cargarPedido(pedidoId,totalReal)
         }
     }
 
@@ -153,7 +156,11 @@ fun SeguimientoScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             Button(
-                onClick = { navController.popBackStack() },
+                onClick = {
+                    navController.navigate(Routes.HOME) {
+                        popUpTo(Routes.HOME) {inclusive = true}
+                    }
+                },
                 modifier = Modifier.fillMaxWidth().height(48.dp)
             ) {
                 Text(text = "Volver al Inicio", fontWeight = FontWeight.Bold)
