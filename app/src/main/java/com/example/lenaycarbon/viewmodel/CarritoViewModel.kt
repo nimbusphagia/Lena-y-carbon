@@ -38,4 +38,21 @@ class CarritoViewModel : ViewModel() {
     }
 
     fun calcularTotal(): Double = _items.value.sumOf { it.subtotal }
+
+    fun actualizarCantidad(productoId: Int, nuevaCantidad: Int) {
+        val listaActual = _items.value.toMutableList()
+        val index = listaActual.indexOfFirst { it.producto.id == productoId }
+
+        if (index >= 0) {
+            if (nuevaCantidad <= 0) {
+                // Si baja a 0 o menos, eliminamos el producto
+                listaActual.removeAt(index)
+            } else {
+                // Actualizamos la cantidad
+                val itemExistente = listaActual[index]
+                listaActual[index] = itemExistente.copy(cantidad = nuevaCantidad)
+            }
+            _items.value = listaActual
+        }
+    }
 }
