@@ -1,4 +1,4 @@
-package com.example.lenaycarbon.data.dto
+package com.example.lenaycarbon.data.local.dto
 
 enum class EstadoPedido {
     REGISTRADO,

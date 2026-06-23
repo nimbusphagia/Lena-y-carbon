@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.lenaycarbon.data.dto.EstadoPedido
+import com.example.lenaycarbon.data.local.dto.EstadoPedido
 import com.example.lenaycarbon.ui.navigation.Routes
 import com.example.lenaycarbon.viewmodel.SeguimientoViewModel
 
@@ -31,9 +31,10 @@ fun SeguimientoScreen(
 
     LaunchedEffect(pedidoId) {
         if (pedidoId != null) {
-            viewModel.cargarPedido(pedidoId, totalReal)
+            viewModel.cargarPedido(pedidoId)
         }
     }
+
 
     val listaEstados = listOf(
         EstadoPedido.REGISTRADO to "Registrado",
@@ -45,7 +46,9 @@ fun SeguimientoScreen(
     )
 
     Column(
-        modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
             .padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // CARGANDO? SE MUESTRA LA RUEDITA
@@ -56,6 +59,7 @@ fun SeguimientoScreen(
         } else {
             // EXTRAEMOS EL PEDIDO
             val pedido = uiState.pedido!!
+            val estadoActual = EstadoPedido.valueOf(pedido.estado)
 
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -74,7 +78,7 @@ fun SeguimientoScreen(
                     Spacer(modifier = Modifier.height(4.dp))
 
                     val textoEstadoActual =
-                        listaEstados.find { it.first == pedido.estado }?.second ?: "Desconocido"
+                        listaEstados.find { it.first == estadoActual }?.second ?: "Desconocido"
                     Text(
                         text = "Estado: $textoEstadoActual",
                         fontSize = 15.sp,
@@ -99,22 +103,27 @@ fun SeguimientoScreen(
                         val enumEstado = parEstado.first
                         val textoEstado = parEstado.second
 
-                        val esEstadoActual = (enumEstado == pedido.estado)
+                        val esEstadoActual = (enumEstado == estadoActual)
                         val yaPaso =
-                            index <= listaEstados.indexOf(listaEstados.find { it.first == pedido.estado })
+                            index <= listaEstados.indexOf(listaEstados.find { it.first == estadoActual })
+
 
                         Row(
-                            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Box(
-                                modifier = Modifier.size(18.dp).background(
-                                    color = when {
-                                        esEstadoActual -> MaterialTheme.colorScheme.primary
-                                        yaPaso -> MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
-                                        else -> MaterialTheme.colorScheme.outline
-                                    }, shape = CircleShape
-                                )
+                                modifier = Modifier
+                                    .size(18.dp)
+                                    .background(
+                                        color = when {
+                                            esEstadoActual -> MaterialTheme.colorScheme.primary
+                                            yaPaso -> MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+                                            else -> MaterialTheme.colorScheme.outline
+                                        }, shape = CircleShape
+                                    )
                             )
 
                             Spacer(modifier = Modifier.width(16.dp))
@@ -154,7 +163,9 @@ fun SeguimientoScreen(
                     navController.navigate(Routes.HOME) {
                         popUpTo(Routes.HOME) { inclusive = true }
                     }
-                }, modifier = Modifier.fillMaxWidth().height(48.dp)
+                }, modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
             ) {
                 Text(text = "Volver al Inicio", fontWeight = FontWeight.Bold)
             }

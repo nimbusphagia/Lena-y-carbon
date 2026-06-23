@@ -13,19 +13,24 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
@@ -39,6 +44,7 @@ import com.example.lenaycarbon.ui.confirmacion.components.TotalCalculator
 import com.example.lenaycarbon.ui.navigation.Routes
 import com.example.lenaycarbon.ui.theme.AppPrimaryOrange
 import com.example.lenaycarbon.viewmodel.CarritoViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun ConfirmacionScreen(
@@ -50,6 +56,7 @@ fun ConfirmacionScreen(
     val tiposPago by confirmacionViewModel.listaTipoPago.collectAsState()
 
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(confirmacionViewModel.errorUbicacion) {
         confirmacionViewModel.errorUbicacion?.let { mensaje ->
@@ -86,6 +93,50 @@ fun ConfirmacionScreen(
             .padding(horizontal = 16.dp)
             .verticalScroll(rememberScrollState())
     ) {
+        Spacer(Modifier.height(9.dp))
+        Text(
+            text = "Confirma tu identidad",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = 16.sp
+        )
+        HorizontalDivider(modifier = Modifier.padding(vertical = 1.dp))
+
+        OutlinedTextField(
+            value = confirmacionViewModel.dni,
+            onValueChange = { confirmacionViewModel.actualizarDni(it) },
+            label = { Text("DNI") },
+            placeholder = { Text("Ingresa tu DNI") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(Modifier.height(6.dp))
+
+        OutlinedButton(
+            onClick = { confirmacionViewModel.validarDni() },
+            enabled = !confirmacionViewModel.validandoDni && confirmacionViewModel.dni.length == 8,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            if (confirmacionViewModel.validandoDni) {
+                Text("Validando...")
+            } else {
+                Text("Validar DNI")
+            }
+        }
+
+        confirmacionViewModel.errorDni?.let {
+            Text(text = it, color = MaterialTheme.colorScheme.error, fontSize = 11.sp)
+        }
+
+        confirmacionViewModel.nombreClienteValidado?.let { nombre ->
+            Text(
+                text = "✓ Cliente: $nombre",
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.padding(top = 2.dp)
+            )
+        }
         Spacer(Modifier.height(30.dp))
 
         Text(
@@ -139,7 +190,8 @@ fun ConfirmacionScreen(
             subTotal = carritoViewModel.calcularTotal(),
             confirmacionViewModel.tipoEntregaSeleccionada?.precio ?: 0.00
         )
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(Modifier.height(10.dp))
+
 
         Column(
             modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -147,12 +199,30 @@ fun ConfirmacionScreen(
 
             Button(
                 onClick = {
-                    val costoEnvio = confirmacionViewModel.tipoEntregaSeleccionada?.precio ?: 0.00
-                    val totalReal = carritoViewModel.calcularTotal() + costoEnvio
-                    val nuevoPedidoId = (10000..99999).random()
-                    carritoViewModel.limpiarCarrito()
-                    nav.navigate(Routes.seguimientoRoute(nuevoPedidoId, totalReal))
+                    scope.launch {
+                        val costoEnvio =
+                            confirmacionViewModel.tipoEntregaSeleccionada?.precio ?: 0.00
+                        val subTotal = carritoViewModel.calcularTotal()
+
+                        val pedidoId = confirmacionViewModel.confirmarPedido(subTotal, costoEnvio)
+
+                        if (pedidoId != null) {
+                            carritoViewModel.limpiarCarrito()
+                            nav.navigate(
+                                Routes.seguimientoRoute(
+                                    pedidoId.toInt(), subTotal + costoEnvio
+                                )
+                            )
+                        } else {
+                            Toast.makeText(
+                                context,
+                                "Completa el DNI, tipo de entrega y tipo de pago antes de confirmar",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
                 },
+                enabled = confirmacionViewModel.nombreClienteValidado != null,
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = AppPrimaryOrange),
             ) {
@@ -162,8 +232,8 @@ fun ConfirmacionScreen(
                     fontSize = 20.sp,
                     modifier = Modifier.padding(6.dp)
                 )
-
             }
         }
     }
+
 }
