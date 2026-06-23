@@ -31,7 +31,7 @@ fun SeguimientoScreen(
 
     LaunchedEffect(pedidoId) {
         if (pedidoId != null) {
-            viewModel.cargarPedido(pedidoId,totalReal)
+            viewModel.cargarPedido(pedidoId, totalReal)
         }
     }
 
@@ -45,11 +45,8 @@ fun SeguimientoScreen(
     )
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)
+            .padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // CARGANDO? SE MUESTRA LA RUEDITA
         if (uiState.isLoading || uiState.pedido == null) {
@@ -76,7 +73,8 @@ fun SeguimientoScreen(
 
                     Spacer(modifier = Modifier.height(4.dp))
 
-                    val textoEstadoActual = listaEstados.find { it.first == pedido.estado }?.second ?: "Desconocido"
+                    val textoEstadoActual =
+                        listaEstados.find { it.first == pedido.estado }?.second ?: "Desconocido"
                     Text(
                         text = "Estado: $textoEstadoActual",
                         fontSize = 15.sp,
@@ -102,25 +100,21 @@ fun SeguimientoScreen(
                         val textoEstado = parEstado.second
 
                         val esEstadoActual = (enumEstado == pedido.estado)
-                        val yaPaso = index <= listaEstados.indexOf(listaEstados.find { it.first == pedido.estado })
+                        val yaPaso =
+                            index <= listaEstados.indexOf(listaEstados.find { it.first == pedido.estado })
 
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 8.dp),
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Box(
-                                modifier = Modifier
-                                    .size(18.dp)
-                                    .background(
-                                        color = when {
-                                            esEstadoActual -> MaterialTheme.colorScheme.primary
-                                            yaPaso -> MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
-                                            else -> MaterialTheme.colorScheme.outline
-                                        },
-                                        shape = CircleShape
-                                    )
+                                modifier = Modifier.size(18.dp).background(
+                                    color = when {
+                                        esEstadoActual -> MaterialTheme.colorScheme.primary
+                                        yaPaso -> MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+                                        else -> MaterialTheme.colorScheme.outline
+                                    }, shape = CircleShape
+                                )
                             )
 
                             Spacer(modifier = Modifier.width(16.dp))
@@ -158,10 +152,9 @@ fun SeguimientoScreen(
             Button(
                 onClick = {
                     navController.navigate(Routes.HOME) {
-                        popUpTo(Routes.HOME) {inclusive = true}
+                        popUpTo(Routes.HOME) { inclusive = true }
                     }
-                },
-                modifier = Modifier.fillMaxWidth().height(48.dp)
+                }, modifier = Modifier.fillMaxWidth().height(48.dp)
             ) {
                 Text(text = "Volver al Inicio", fontWeight = FontWeight.Bold)
             }
