@@ -144,7 +144,7 @@ fun SeguimientoScreen(
                     ) {
                         Text(text = "Total Pagado:", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                         Text(
-                            text = "S/ ${pedido.total}",
+                            text = "S/ ${"%.2f".format(pedido.total)}",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.ExtraBold,
                             color = MaterialTheme.colorScheme.primary

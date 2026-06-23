@@ -1,16 +1,33 @@
 package com.example.lenaycarbon.viewmodel
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.lenaycarbon.data.local.dto.ItemCarrito
 import com.example.lenaycarbon.data.local.entity.Producto
+import com.example.lenaycarbon.data.repository.PedidoRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import kotlin.collections.toMutableList
 
-class CarritoViewModel : ViewModel() {
+class CarritoViewModel(application: Application) : AndroidViewModel(application) {
+    private val pedidoRepository = PedidoRepository(application)
+
     private val _items = MutableStateFlow<List<ItemCarrito>>(emptyList())
     val items: StateFlow<List<ItemCarrito>> = _items.asStateFlow()
+
+    private val _pedidoEnCurso = MutableStateFlow(false)
+    val pedidoEnCurso: StateFlow<Boolean> = _pedidoEnCurso.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            pedidoRepository.obtenerPedidoActivo().collect { pedidoActivo ->
+                _pedidoEnCurso.value = pedidoActivo != null
+            }
+        }
+    }
 
     val total: StateFlow<Double>
         get() = MutableStateFlow(

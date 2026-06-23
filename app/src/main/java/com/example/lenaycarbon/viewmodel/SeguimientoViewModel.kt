@@ -65,12 +65,12 @@ class SeguimientoViewModel(application: Application) : AndroidViewModel(applicat
                     // COMO EL CARRITO AUN NO GUARDA BD, VOY CREANDO UN DATO
                     val pedidoPrueba = PedidoEntity(
                         id = pedidoId,
-                        codigo = 99201,
+                        codigo = (10000..99999).random(),
                         idCliente = 1,
                         estado = EstadoPedido.REGISTRADO.name,
-                        subTotal = 60.00,
+                        subTotal = totalReal,
                         idTipoEntrega = 1,
-                        total = 72.90,
+                        total = totalReal,
                         observacion = "Sin mayonesa",
                         fechaPedido = System.currentTimeMillis(),
                         idTipoPago = 1

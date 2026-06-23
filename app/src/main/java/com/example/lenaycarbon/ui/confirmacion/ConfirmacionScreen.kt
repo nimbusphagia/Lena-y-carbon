@@ -120,7 +120,9 @@ fun ConfirmacionScreen(
                 onClick = {
                     val costoEnvio = confirmacionViewModel.tipoEntregaSeleccionada?.precio?: 0.00
                     val totalReal = carritoViewModel.calcularTotal() + costoEnvio
-                    nav.navigate(Routes.seguimientoRoute(12345,totalReal))
+                    val nuevoPedidoId = (10000..99999).random()
+                    carritoViewModel.limpiarCarrito()
+                    nav.navigate(Routes.seguimientoRoute(nuevoPedidoId, totalReal))
                 },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = AppPrimaryOrange),

@@ -22,6 +22,7 @@ import com.example.lenaycarbon.viewmodel.CarritoViewModel
 @Composable
 fun CarritoScreen(nav: NavController, carritoViewModel: CarritoViewModel) {
     val items by carritoViewModel.items.collectAsStateWithLifecycle()
+    val pedidoEnCurso by carritoViewModel.pedidoEnCurso.collectAsStateWithLifecycle()
     val total = items.sumOf { it.subtotal }
 
     Column(
@@ -169,9 +170,10 @@ fun CarritoScreen(nav: NavController, carritoViewModel: CarritoViewModel) {
                 onClick = { nav.navigate(Routes.CONFIRMACION) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(52.dp)
+                    .height(52.dp),
+                enabled = !pedidoEnCurso
             ) {
-                Text("Confirmar compra")
+                Text(if (pedidoEnCurso) "Ya hay un pedido en curso" else "Confirmar compra")
             }
         }
     }
